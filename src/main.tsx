@@ -14,7 +14,7 @@ import TicTacToe from './components/TicTacToe.tsx';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/kidsgames",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
