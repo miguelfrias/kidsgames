@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './TicTacToe.css';
 
 function TicTacToe() {
@@ -27,7 +27,7 @@ function TicTacToe() {
     return null;
   };
 
-  const handleClick = (i) => {
+  const handleClick = (i:  number) => {
     const newBoard = [...board];
     if (calculateWinner() || newBoard[i]) return;
 
@@ -36,7 +36,7 @@ function TicTacToe() {
     setXIsNext(!xIsNext);
   };
 
-  const renderSquare = (i) => {
+  const renderSquare = (i: number) => {
     let squareClasses = 'square flex align-center justify-center';
     if (board[i]) {
         squareClasses += ` square-${board[i]}`;
