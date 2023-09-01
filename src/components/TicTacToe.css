@@ -1,0 +1,44 @@
+.game .board-row button {
+    border-radius: 0;
+}
+
+.game button:focus,
+.game  button:focus-visible {
+    outline: none !important;
+    border-color: transparent;
+}
+.game .square {
+    width: 8rem;
+    height: 8rem;
+    font-size: 2rem;
+    line-height: 1;
+    background-color: white;
+    color:  black;
+    display: inline-block;
+    padding: 0 !important;
+    border-width: thick;
+    margin: 0;
+}
+
+.game .square-X {
+    color: yellowgreen;
+}
+.game .square-O {
+    color: red;
+}
+
+/* Top/Bottom */
+.game .board-row:nth-child(2) > button:nth-child(2),
+.game .board-row:nth-child(4) > button:nth-child(2) {
+    border-right-color: black;
+    border-left-color: black;
+}
+/* Center */
+.game .board-row:nth-child(3) > button:nth-child(2) {
+    border-color: black;
+}
+.game .board-row:nth-child(3) > button:nth-child(1),
+.game .board-row:nth-child(3) > button:nth-child(3) {
+    border-top-color: black;
+    border-bottom-color: black;
+}
