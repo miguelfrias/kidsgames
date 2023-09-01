@@ -14,7 +14,7 @@ import TicTacToe from './components/TicTacToe.tsx';
 
 const router = createBrowserRouter([
   {
-    path: "/kidsgames",
+    path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
@@ -32,7 +32,9 @@ const router = createBrowserRouter([
       },
     ]
   },
-]);
+], {
+  basename: "/kidsgames"
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
