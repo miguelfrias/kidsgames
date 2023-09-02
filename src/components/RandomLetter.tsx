@@ -19,8 +19,10 @@ const RandomLetter = () => {
     };
 
     const colorStyle = {
-      color: getRandomColor()
-    }
+      color: getRandomColor(),
+      fontSize: '30rem',
+      lineHeight: 1,
+    };
 
     return (
       <div className='m-4 grid place-content-center text-center'>

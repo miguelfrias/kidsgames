@@ -10,8 +10,8 @@ const RandomColor = () => {
 
   const colorStyle = {
     backgroundColor: color,
-    width: '200px',
-    height: '200px',
+    width: '100%',
+    height: '50vh',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -22,7 +22,7 @@ const RandomColor = () => {
 
   return (
     <div className='m-4 grid place-content-center justify-center align-cneter'>
-        <h1>Random Color</h1>
+        <h1>What color is it?</h1>
         <div className='inline-block center' style={colorStyle}> </div>
         <button onClick={handleChangeColor}>Change Color</button>
     </div>
