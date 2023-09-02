@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 env:
-  APP_ENV: prod
+  NODE_ENV: prod
 
 jobs:
   # Build job
