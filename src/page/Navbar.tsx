@@ -1,4 +1,5 @@
 import { Disclosure } from '@headlessui/react'
+import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
@@ -34,7 +35,7 @@ export default function Navbar() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="hidden sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {/* {navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
@@ -46,7 +47,15 @@ export default function Navbar() {
                       >
                         {item.name}
                       </a>
+                    ))} */}
+                    {navigation.map((item) => (
+                      <Link className={classNames(
+                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'rounded-md px-3 py-2 text-sm font-medium'
+                      )}
+                      aria-current={item.current ? 'page' : undefined} to={item.href}>{item.name}</Link>
                     ))}
+
                   </div>
                 </div>
               </div>
