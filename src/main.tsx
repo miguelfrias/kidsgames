@@ -33,7 +33,7 @@ const router = createBrowserRouter([
     ]
   },
 ], {
-  basename: import.meta.env.NODE_ENV === 'prod' ? "/kidsgames" : ''
+  basename: "/kidsgames"
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
