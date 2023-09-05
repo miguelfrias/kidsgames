@@ -21,26 +21,6 @@ function DrawingCanvas() {
     }
   }, [color, strokeWidth]);
 
-  // Function to resize the canvas based on the parent's width
-  const resizeCanvas = () => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const parent = canvas.parentElement;
-    if (parent) {
-      canvas.width = parent.clientWidth - 5;
-      canvas.height = parent.clientHeight;
-    }
-  };
-
-  useEffect(() => {
-    // Resize the canvas when the component mounts and whenever the window is resized
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-    };
-  }, []);
-
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!context || !canvasRef.current) return;
 
@@ -84,13 +64,10 @@ function DrawingCanvas() {
   };
 
   return (
-    <div className="grid self-center">
-      <label htmlFor="color">
-        Color: &nbsp;
-        <input type="color" value={color} onChange={handleColorChange} />
-      </label>
+    <div>
+      <input type="color" value={color} onChange={handleColorChange} />
       <label>
-        Stroke Width: &nbsp;
+        Stroke Width:
         <select value={strokeWidth} onChange={handleStrokeWidthChange}>
           <option value={1}>1</option>
           <option value={2}>2</option>
@@ -99,19 +76,19 @@ function DrawingCanvas() {
           <option value={5}>5</option>
         </select>
       </label>
-      <div className='relative'>
-        <canvas
-            ref={canvasRef}
-            onMouseDown={startDrawing}
-            onMouseMove={draw}
-            onMouseUp={endDrawing}
-            onMouseLeave={endDrawing}
-            onTouchStart={startDrawing}
-            onTouchMove={draw}
-            onTouchEnd={endDrawing}
-            style={{ border: '1px solid black' }}
-        />
-      </div>
+      <canvas
+        ref={canvasRef}
+        width={385}
+        height={385}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={endDrawing}
+        onMouseLeave={endDrawing}
+        onTouchStart={startDrawing}
+        onTouchMove={draw}
+        onTouchEnd={endDrawing}
+        style={{ border: '1px solid black' }}
+      />
       <button onClick={clearCanvas}>Clear Canvas</button>
     </div>
   );
