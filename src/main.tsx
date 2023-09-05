@@ -11,6 +11,7 @@ import ErrorPage from './routes/root.tsx';
 import RandomColor from './components/RandomColor.tsx';
 import RandomLetter from './components/RandomLetter.tsx';
 import TicTacToe from './components/TicTacToe.tsx';
+import DrawingCanvas from './components/DrawingCanvas.tsx';
 
 const router = createBrowserRouter([
   {
@@ -30,10 +31,14 @@ const router = createBrowserRouter([
         path: "tic-tac-toe",
         element: <TicTacToe />,
       },
+      {
+        path: "draw",
+        element: <DrawingCanvas />,
+      },
     ]
   },
 ], {
-  basename: "/kidsgames"
+  basename: import.meta.env.NODE_ENV !== 'local' ? "/kidsgames" : '/'
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

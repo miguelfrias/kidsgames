@@ -7,6 +7,7 @@ const navigation = [
   { name: 'Random Letter', href: '/random-letter', current: true },
   { name: 'Random Color', href: '/random-color', current: true },
   { name: 'Tic Tac Toe', href: '/tic-tac-toe', current: true },
+  { name: 'Draw', href: '/draw', current: true },
 ]
 
 function classNames(...classes: string[]) {
