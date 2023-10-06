@@ -21,10 +21,10 @@ const RandomColor = () => {
   };
 
   return (
-    <div className='m-4 grid place-content-center justify-center align-cneter'>
-        <h1>What color is it?</h1>
+    <div className='p-4 place-content-center justify-center align-center select-none'>
+        <h1 className='text-5xl'>What color is it?</h1>
         <div className='inline-block center' style={colorStyle}> </div>
-        <button onClick={handleChangeColor}>Change Color</button>
+        <button className='bg-blue-500 py-2 px-4 w-full rounded text-white inline-block' onClick={handleChangeColor}>Change Color</button>
     </div>
   );
 };

@@ -6,7 +6,7 @@ function DrawingCanvas() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null);
   const [color, setColor] = useState<string>(getRandomColor()); // Initial color is black
-  const [strokeWidth, setStrokeWidth] = useState<number>(4); // Initial stroke width
+  const [strokeWidth, setStrokeWidth] = useState<number>(8); // Initial stroke width
 
   function setCanvasColorAndStroke() {
     if (!canvasRef.current) return;
@@ -25,10 +25,6 @@ function DrawingCanvas() {
     setCanvasColorAndStroke();
   }, [color, strokeWidth]);
 
-  const resizeCanvas = () => {
-    setCanvasColorAndStroke();
-  };
-
   useEffect(() => {
     // Resize the canvas when the component mounts and whenever the window is resized
     resizeCanvas();
@@ -38,12 +34,24 @@ function DrawingCanvas() {
     };
   }, []);
 
+  useEffect(() => {
+    canvasRef.current?.addEventListener('touchstart', preventDefault);
+    return () => {
+      canvasRef.current?.addEventListener('touchstart', preventDefault);
+    }
+  }, []);
+
+  const preventDefault = (e: TouchEvent) => e.preventDefault();
+
+  const resizeCanvas = () => {
+    setCanvasColorAndStroke();
+  };
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!context || !canvasRef.current) return;
 
     setIsDrawing(true);
-    console.log(`startDrawings: `, e);
+    // console.log(`startDrawings: `, e);
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     context.beginPath();
@@ -83,7 +91,7 @@ function DrawingCanvas() {
   };
 
   return (
-    <div>
+    <div className='w-full overflow-hidden'>
       <input type="color" value={color} onChange={handleColorChange} />
       &nbsp;
       <label className='ml-4'>
@@ -94,6 +102,11 @@ function DrawingCanvas() {
           <option value={3}>3</option>
           <option value={4}>4</option>
           <option value={5}>5</option>
+          <option value={6}>6</option>
+          <option value={7}>7</option>
+          <option value={8}>8</option>
+          <option value={9}>9</option>
+          <option value={10}>10</option>
         </select>
       </label>
       <button className='ml-4' onClick={clearCanvas}>Clear Canvas</button>
@@ -108,6 +121,7 @@ function DrawingCanvas() {
         onTouchStart={startDrawing}
         onTouchMove={draw}
         onTouchEnd={endDrawing}
+        className='overscroll-none'
         style={{ border: '1px solid black' }}
       />
     </div>
