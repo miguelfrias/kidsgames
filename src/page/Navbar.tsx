@@ -4,10 +4,11 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
-  { name: 'Random Letter', href: '/random-letter', current: true },
-  { name: 'Random Color', href: '/random-color', current: true },
-  { name: 'Tic Tac Toe', href: '/tic-tac-toe', current: true },
-  { name: 'Draw', href: '/draw', current: true },
+  { name: 'Random Letter', href: '/random-letter', current: false },
+  { name: 'Random Color', href: '/random-color', current: false },
+  { name: 'Tic Tac Toe', href: '/tic-tac-toe', current: false },
+  { name: 'Draw', href: '/draw', current: false },
+  { name: 'PopIt', href: '/popit', current: false },
 ]
 
 function classNames(...classes: string[]) {

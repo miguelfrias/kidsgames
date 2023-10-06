@@ -11,6 +11,7 @@ import RandomColor from './components/RandomColor.tsx';
 import RandomLetter from './components/RandomLetter.tsx';
 import TicTacToe from './components/TicTacToe.tsx';
 import DrawingCanvas from './components/DrawingCanvas.tsx';
+import PopIt from './components/PopIt.tsx';
 
 const router = createHashRouter([
   {
@@ -33,6 +34,10 @@ const router = createHashRouter([
       {
         path: "draw",
         element: <DrawingCanvas />,
+      },
+      {
+        path: "popit",
+        element: <PopIt />,
       },
     ]
   },
