@@ -109,7 +109,7 @@ function DrawingCanvas() {
           <option value={10}>10</option>
         </select>
       </label>
-      <button className='ml-4' onClick={clearCanvas}>Clear Canvas</button>
+      <button className='ml-4 py-1 py-4 bg-blue-400 px-4 rounded text-gray-50' onClick={clearCanvas}>Clear Canvas</button>
       <canvas
         ref={canvasRef}
         width={385}

@@ -85,7 +85,7 @@ function TicTacToe() {
         </div>
       </div>
       <div className='flex justify-center my-4'>
-        <button className="reset-button px-20" onClick={handleReset}>
+        <button className="reset-button px-20 bg-blue-500 py-3 px-4 w-full rounded text-white inline-block" onClick={handleReset}>
             Reset Game
         </button>
       </div>

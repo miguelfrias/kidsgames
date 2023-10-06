@@ -1,8 +1,7 @@
 import React from 'react';
-// import ReactDOM from 'react-dom/client';
 import ReactDOM from 'react-dom/client';
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from 'react-router-dom';
 import App from './App.tsx';
@@ -13,7 +12,7 @@ import RandomLetter from './components/RandomLetter.tsx';
 import TicTacToe from './components/TicTacToe.tsx';
 import DrawingCanvas from './components/DrawingCanvas.tsx';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <App />,
