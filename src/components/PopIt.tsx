@@ -5,6 +5,7 @@ const PopIt = () => {
   const imageWidth = 50;
   const imageHeight = 50;
   const runningTime = 30000; // 30 seconds
+  const durationForEachItemDisplay = 2000; // 2 seconds
   const imagePath = './mickey_ears_edited.png';
   const containerRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -13,7 +14,6 @@ const PopIt = () => {
   const [itemsDisplayed, setItemsDisplayed] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameRunning, setIsGameRunning] = useState(false);
-  const [durationForEachItemDisplay, setDurationForEachItemDisplay] = useState(2000);
 
   // For random positioning of the item:
   useEffect(() => {
@@ -40,12 +40,12 @@ const PopIt = () => {
     return () => clearTimeout(gameTimer);
   }, [isGameRunning]);
 
-  function handleClick(e: React.ChangeEvent<HTMLDivElement>) {
+  function handleClick(e: React.MouseEvent<HTMLDivElement>) {
     if (!isGameRunning) {
       return ;
     }
 
-    if (e.target.tagName === 'IMG') {
+    if ((e.target as HTMLDivElement).tagName === 'IMG') {
       setScore(prev => prev + 1);
     }
   }
@@ -88,7 +88,7 @@ const PopIt = () => {
         <span className='ml-4'>Score {score}</span>
       </div>
       {/* Game container */}
-      <div id="PopItGameContainer" ref={containerRef} onClick={handleClick} style={{ position: 'relative', width: '100vw', height: '88vh' }}>
+      <div id="PopItGameContainer" ref={containerRef} onClick={(event) => { handleClick(event as React.MouseEvent<HTMLDivElement>) }} style={{ position: 'relative', width: '100vw', height: '88vh' }}>
         {/* Your image item */}
         {!isGameOver && <img ref={imageRef} className='transition-all animate__animated animate__bounce scale-150' src={imagePath} style={{ width: `${imageWidth}px`, height: `${imageHeight}px`, position: 'absolute', left: `${position.x}px`, top: `${position.y}px` }} />}
         {isGameOver && <div className='shadow-2xl w-1/2 h-1/2 relative rounded border-slate-100 backdrop-contrast-80 m-auto top-6 p-5'><p><strong>Score: {score}</strong></p><p className='mt-2'>Total: {itemsDisplayed}</p></div>}
