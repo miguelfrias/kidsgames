@@ -4,6 +4,7 @@ import { getRandomColor } from '../utils';
 import ANIMALS_EN from '../assets/animals-EN';
 import ANIMALS_ES from '../assets/animals-ES';
 import StringArrays from '../types/StringArrays.type';
+import DisplayAnimal from './Animal';
 
 const RandomLetter = () => {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -78,7 +79,8 @@ const RandomLetter = () => {
     return (
       <div className='p-2 text-center select-none w-full overflow-hidden relative' style={{'height': '90vh'}}>
         <h1 className='font-bold' style={colorStyle}>{letter}</h1>
-        <h3>{animal}</h3>
+        { showAnimal ? (<DisplayAnimal animalName={animal}></DisplayAnimal>) : '' }
+
         <div className=''>
           <button className='bg-blue-500 py-3 px-4 w-full rounded text-white inline-block' onClick={handleChangeLetter}>Change Letter</button>
           <Switch.Group>
