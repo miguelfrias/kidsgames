@@ -28,15 +28,6 @@ const RandomLetter = () => {
       }
 
       setLetter(newLetter);
-      window.speechSynthesis.cancel();
-
-      if (shouldSpeak) {
-        speak(newLetter);
-      }
-
-      if (showAnimal) {
-        setAnimal(getAnimal(newLetter));
-      }
     };
 
     const getAnimal = useCallback((startLetter: string): string => {
@@ -74,10 +65,12 @@ const RandomLetter = () => {
     }, [ getAnimal, letter, showAnimal ]);
 
     useEffect(() => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+      }
+
       if (shouldSpeak) {
         speak(letter);
-      } else if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
       }
 
     }, [letter, shouldSpeak, speak]);
