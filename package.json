@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "build:digitalocean": "npm install --production=false && npm run build && npm ci"
+    "build:digitalocean": "npm ci && npm run build"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
