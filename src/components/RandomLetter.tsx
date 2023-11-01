@@ -77,7 +77,7 @@ const RandomLetter = () => {
     }, [letter, shouldSpeak, speak]);
 
     return (
-      <div className='p-2 text-center select-none w-full overflow-hidden relative' style={{'height': '90vh'}}>
+      <div className='p-2 text-center select-none w-full relative' style={{'height': '90vh'}}>
         <h1 className='font-bold' style={colorStyle}>{letter}</h1>
         { showAnimal ? (<DisplayAnimal animalName={animal}></DisplayAnimal>) : '' }
 
