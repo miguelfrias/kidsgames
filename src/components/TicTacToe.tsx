@@ -50,11 +50,14 @@ function TicTacToe() {
 
   const winner = calculateWinner();
   let status;
+  let statusClasses = "status my-5 font-bold";
 
   if (winner) {
     status = `Winner: ${winner}`;
+    statusClasses += " bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg";
   } else if (board.every((square) => square !== null)) {
     status = 'Draw!';
+    statusClasses += " bg-yellow-500 text-white px-4 py-2 rounded-lg shadow-lg";
   } else {
     status = `Next player: ${xIsNext ? 'X' : 'O'}`;
   }
@@ -67,7 +70,15 @@ function TicTacToe() {
   return (
     <div className="game">
       <div className="game-board grid place-content-center text-center">
-        <div className="status  my-5 font-bold">{status}</div>
+        <div className={statusClasses}>
+          {winner ? (
+            <>
+              Winner: <span className="font-extrabold text-xl">{winner}</span>
+            </>
+          ) : (
+            status
+          )}
+        </div>
         <div className="board-row">
           {renderSquare(0)}
           {renderSquare(1)}

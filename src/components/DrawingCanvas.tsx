@@ -10,8 +10,6 @@ function DrawingCanvas() {
 
   function setCanvasColorAndStroke() {
     if (!canvasRef.current) return;
-    canvasRef.current.width = window.innerWidth - 5;
-    canvasRef.current.height = window.innerHeight - 120;
     const ctx = canvasRef.current.getContext('2d');
     if (ctx) {
       setContext(ctx);
@@ -21,16 +19,42 @@ function DrawingCanvas() {
     }
   }
 
+  function initializeCanvas() {
+    if (!canvasRef.current) return;
+    // Use setTimeout to ensure we get the correct dimensions after orientation change
+    setTimeout(() => {
+      if (!canvasRef.current) return;
+      canvasRef.current.width = window.innerWidth - 5;
+      canvasRef.current.height = window.innerHeight - 108;
+      setCanvasColorAndStroke();
+    }, 100);
+  }
+
   useEffect(() => {
     setCanvasColorAndStroke();
   }, [color, strokeWidth]);
 
   useEffect(() => {
     // Resize the canvas when the component mounts and whenever the window is resized
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    initializeCanvas();
+    
+    const handleResize = () => {
+      initializeCanvas();
+    };
+    
+    const handleOrientationChange = () => {
+      // Add a longer delay for orientation changes
+      setTimeout(() => {
+        initializeCanvas();
+      }, 300);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
+    
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
     };
   }, []);
 
@@ -42,10 +66,6 @@ function DrawingCanvas() {
   }, []);
 
   const preventDefault = (e: TouchEvent) => e.preventDefault();
-
-  const resizeCanvas = () => {
-    setCanvasColorAndStroke();
-  };
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!context || !canvasRef.current) return;
@@ -90,26 +110,28 @@ function DrawingCanvas() {
     setStrokeWidth(Number(e.target.value)); // Update the stroke width
   };
 
-  return (
-    <div className='w-full overflow-hidden'>
+  return (<>
+    <div className='mt-1 mb-1 flex justify-center items-center'>
       <input type="color" value={color} onChange={handleColorChange} />
       &nbsp;
       <label className='ml-4'>
         Stroke Width:
         <select value={strokeWidth} onChange={handleStrokeWidthChange}>
-          <option value={1}>1</option>
           <option value={2}>2</option>
-          <option value={3}>3</option>
           <option value={4}>4</option>
-          <option value={5}>5</option>
           <option value={6}>6</option>
-          <option value={7}>7</option>
           <option value={8}>8</option>
-          <option value={9}>9</option>
           <option value={10}>10</option>
+          <option value={12}>12</option>
+          <option value={15}>15</option>
+          <option value={20}>20</option>
+          <option value={25}>25</option>
+          <option value={30}>30</option>
         </select>
       </label>
-      <button className='ml-4 py-1 py-4 bg-blue-400 px-4 rounded text-gray-50' onClick={clearCanvas}>Clear Canvas</button>
+      <button className='ml-4 py-1 py-1 bg-blue-400 px-4 rounded text-gray-50' onClick={clearCanvas}>Clear Canvas</button>
+    </div>
+    <div className='w-full overflow-hidden'>
       <canvas
         ref={canvasRef}
         width={385}
@@ -122,10 +144,10 @@ function DrawingCanvas() {
         onTouchMove={draw}
         onTouchEnd={endDrawing}
         className='overscroll-none'
-        style={{ border: '1px solid black' }}
+        style={{ borderTop: '1px solid black' }}
       />
     </div>
-  );
+  </>);
 }
 
 export default DrawingCanvas;
