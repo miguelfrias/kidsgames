@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   // base: process.env.NODE_ENV !== 'local' ? '/kidsgames/' : '/',
   plugins: [
-    react({ tsDecorators: true, devTarget: "es2022" }),
+    react({ tsDecorators: true }),
     VitePWA({
       registerType: 'autoUpdate', // this will auto update immediately when changes are found
       workbox: {
