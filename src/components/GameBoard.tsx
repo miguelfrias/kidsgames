@@ -106,6 +106,37 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
     setAttemptCount(0)
   }
 
+  const speakWord = (wordToSpeak: string) => {
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel()
+      
+      const utterance = new SpeechSynthesisUtterance(wordToSpeak)
+      
+      // Configure speech settings for kids
+      utterance.rate = 0.7 // Slower pace for better comprehension
+      utterance.pitch = 1.1 // Slightly higher pitch for kids
+      utterance.volume = 0.8
+      
+      // Try to use a child-friendly voice if available
+      const voices = window.speechSynthesis.getVoices()
+      const preferredVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('female') || 
+        voice.name.toLowerCase().includes('woman') ||
+        voice.name.toLowerCase().includes('child')
+      )
+      
+      if (preferredVoice) {
+        utterance.voice = preferredVoice
+      }
+      
+      window.speechSynthesis.speak(utterance)
+    } else {
+      // Fallback for browsers that don't support speech synthesis
+      console.log('Speech synthesis not supported')
+    }
+  }
+
   // Calculate which letters are still available to show
   const availableLettersToShow = availableLetters.filter((letter, index) => {
     // Count how many of this letter are already placed
@@ -181,6 +212,19 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
                 isDragging={activeId === letter}
               />
             ))}
+          </div>
+
+          {/* Speak Word Button */}
+          <br />
+          <br />
+          <div className="flex justify-center mt-6 mb-6">
+            <button
+              onClick={() => speakWord(word.word)}
+              className="flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-full font-medium transition-all duration-200 hover:scale-105 shadow-lg"
+            >
+              <span className="text-2xl">🔊</span>
+              <span className="text-lg">Hear the word</span>
+            </button>
           </div>
 
         {/* Hint Message */}
