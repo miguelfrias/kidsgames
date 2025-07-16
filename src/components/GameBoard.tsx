@@ -125,7 +125,7 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-purple-100 to-pink-100 p-4">
+      <div className=" bg-gradient-to-b from-purple-100 to-pink-100 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
