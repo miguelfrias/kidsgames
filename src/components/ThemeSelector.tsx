@@ -7,7 +7,7 @@ interface ThemeSelectorProps {
 
 function ThemeSelector({ themes, onThemeSelect }: ThemeSelectorProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-green-100 p-4">
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-blue-100 to-green-100 p-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Choose Your Adventure! 🎯
