@@ -1,7 +1,7 @@
 import { useDraggable } from '@dnd-kit/core'
 import { LetterTileProps } from '../types/WordBuilder.types'
 
-function LetterTile({ letter, index, isDragging }: LetterTileProps) {
+function LetterTile({ letter, isDragging }: LetterTileProps) {
   const {
     attributes,
     listeners,

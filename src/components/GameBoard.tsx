@@ -178,7 +178,6 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
               <LetterTile
                 key={`${letter}-${index}`}
                 letter={letter}
-                index={index}
                 isDragging={activeId === letter}
               />
             ))}

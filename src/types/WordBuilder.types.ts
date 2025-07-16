@@ -29,7 +29,6 @@ export interface GameState {
 
 export interface LetterTileProps {
   letter: string
-  index: number
   isDragging: boolean
 }
 
