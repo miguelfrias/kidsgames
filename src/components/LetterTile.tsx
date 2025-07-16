@@ -1,21 +1,26 @@
+import { useDraggable } from '@dnd-kit/core'
 import { LetterTileProps } from '../types/WordBuilder.types'
 
-function LetterTile({ letter, index, onDragStart, onDragEnd, isDragging }: LetterTileProps) {
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', letter)
-    e.dataTransfer.setData('index', index.toString())
-    onDragStart(index)
-  }
+function LetterTile({ letter, index, isDragging }: LetterTileProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+  } = useDraggable({
+    id: letter,
+  })
 
-  const handleDragEnd = () => {
-    onDragEnd()
-  }
+  const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+  } : undefined
 
   return (
     <div
-      draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
       className={`
         w-16 h-16 sm:w-20 sm:h-20 
         bg-white 

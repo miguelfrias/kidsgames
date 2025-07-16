@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { DndContext, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { WordData } from '../types/WordBuilder.types'
 import { shuffleArray } from '../data/gameData'
 import LetterTile from './LetterTile'
@@ -17,9 +18,25 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
     Array(word.word.length).fill(null)
   )
   const [availableLetters, setAvailableLetters] = useState<string[]>([])
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const [attemptCount, setAttemptCount] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [activeId, setActiveId] = useState<string | null>(null)
+
+  // Configure sensors for both mouse and touch
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 8,
+    },
+  })
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 300,
+      tolerance: 8,
+    },
+  })
+
+  const sensors = useSensors(mouseSensor, touchSensor)
   
   const wordLetters = word.word.toLowerCase().split('')
   const isComplete = placedLetters.every((letter, index) => 
@@ -45,29 +62,35 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
     }
   }, [isComplete, showSuccess])
 
-  const handleDragStart = (index: number) => {
-    setDraggedIndex(index)
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string)
   }
 
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
-  }
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    setActiveId(null)
 
-  const handleDrop = (slotIndex: number, letter: string) => {
-    const correctLetter = wordLetters[slotIndex]
+    if (!over) return
+
+    const draggedLetter = active.id as string
+    const targetSlotIndex = parseInt(over.id as string)
+    
+    if (isNaN(targetSlotIndex)) return
+
+    const correctLetter = wordLetters[targetSlotIndex]
     const newPlacedLetters = [...placedLetters]
     
     // Remove letter from its current position if it exists
-    const existingIndex = newPlacedLetters.indexOf(letter)
+    const existingIndex = newPlacedLetters.indexOf(draggedLetter)
     if (existingIndex !== -1) {
       newPlacedLetters[existingIndex] = null
     }
     
-    newPlacedLetters[slotIndex] = letter.toLowerCase()
+    newPlacedLetters[targetSlotIndex] = draggedLetter.toLowerCase()
     setPlacedLetters(newPlacedLetters)
     
     // Track wrong attempts for hint system
-    if (letter.toLowerCase() !== correctLetter) {
+    if (draggedLetter.toLowerCase() !== correctLetter) {
       setAttemptCount(prev => prev + 1)
     }
   }
@@ -97,7 +120,12 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
   })
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-purple-100 to-pink-100 p-4">
+    <DndContext
+      sensors={sensors}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-b from-purple-100 to-pink-100 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -131,35 +159,30 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
           <p className="text-2xl text-gray-600">
             Drag the letters to spell this word!
           </p>
-        </div>
+        </div>          {/* Letter Slots */}
+          <div className="flex justify-center gap-2 mb-8">
+            {wordLetters.map((correctLetter, index) => (
+              <LetterSlot
+                key={index}
+                index={index}
+                letter={placedLetters[index]}
+                correctLetter={correctLetter}
+                isHighlighted={showHint && index === nextEmptyIndex}
+              />
+            ))}
+          </div>
 
-        {/* Letter Slots */}
-        <div className="flex justify-center gap-2 mb-8">
-          {wordLetters.map((correctLetter, index) => (
-            <LetterSlot
-              key={index}
-              index={index}
-              letter={placedLetters[index]}
-              correctLetter={correctLetter}
-              onDrop={handleDrop}
-              isHighlighted={showHint && index === nextEmptyIndex}
-            />
-          ))}
-        </div>
-
-        {/* Available Letters */}
-        <div className="flex justify-center gap-2 flex-wrap">
-          {availableLettersToShow.map((letter, index) => (
-            <LetterTile
-              key={`${letter}-${index}`}
-              letter={letter}
-              index={index}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              isDragging={draggedIndex === index}
-            />
-          ))}
-        </div>
+          {/* Available Letters */}
+          <div className="flex justify-center gap-2 flex-wrap">
+            {availableLettersToShow.map((letter, index) => (
+              <LetterTile
+                key={`${letter}-${index}`}
+                letter={letter}
+                index={index}
+                isDragging={activeId === letter}
+              />
+            ))}
+          </div>
 
         {/* Hint Message */}
         {showHint && nextEmptyIndex !== -1 && (
@@ -180,6 +203,7 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
         )}
       </div>
     </div>
+    </DndContext>
   )
 }
 

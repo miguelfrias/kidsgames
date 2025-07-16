@@ -30,8 +30,6 @@ export interface GameState {
 export interface LetterTileProps {
   letter: string
   index: number
-  onDragStart: (index: number) => void
-  onDragEnd: () => void
   isDragging: boolean
 }
 
@@ -39,6 +37,5 @@ export interface LetterSlotProps {
   index: number
   letter: string | null
   correctLetter: string
-  onDrop: (index: number, letter: string) => void
   isHighlighted: boolean
 }
