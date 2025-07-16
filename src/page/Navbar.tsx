@@ -9,6 +9,7 @@ const navigation = [
   { name: 'Tic Tac Toe', href: '/tic-tac-toe', current: false },
   { name: 'Draw', href: '/draw', current: false },
   { name: 'PopIt', href: '/popit', current: false },
+  { name: 'Word Builder', href: '/word-builder', current: false },
 ]
 
 function classNames(...classes: string[]) {

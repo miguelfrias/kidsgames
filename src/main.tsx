@@ -12,6 +12,8 @@ import RandomLetter from './components/RandomLetter.tsx';
 import TicTacToe from './components/TicTacToe.tsx';
 import DrawingCanvas from './components/DrawingCanvas.tsx';
 import PopIt from './components/PopIt.tsx';
+import WordBuilderGame from './components/WordBuilderGame.tsx';
+import Dashboard from './components/Dashboard.tsx';
 
 const router = createHashRouter([
   {
@@ -19,6 +21,10 @@ const router = createHashRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
       {
         path: "random-letter",
         element: <RandomLetter />,
@@ -38,6 +44,10 @@ const router = createHashRouter([
       {
         path: "popit",
         element: <PopIt />,
+      },
+      {
+        path: "word-builder",
+        element: <WordBuilderGame />,
       },
     ]
   },
