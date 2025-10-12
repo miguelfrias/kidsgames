@@ -10,6 +10,13 @@ function Dashboard() {
       color: 'bg-purple-500'
     },
     {
+      name: 'Tetris Puzzle',
+      href: '/tetris',
+      icon: '🧩',
+      description: 'Drag and drop colorful blocks to clear lines!',
+      color: 'bg-indigo-500'
+    },
+    {
       name: 'Random Letter',
       href: '/random-letter',
       icon: '🔤',
