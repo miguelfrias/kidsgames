@@ -30,6 +30,7 @@ export interface GameState {
 export interface LetterTileProps {
   letter: string
   isDragging: boolean
+  id?: string
 }
 
 export interface LetterSlotProps {

@@ -1,19 +1,22 @@
 import { useDraggable } from '@dnd-kit/core'
 import { LetterTileProps } from '../types/WordBuilder.types'
 
-function LetterTile({ letter, isDragging }: LetterTileProps) {
+function LetterTile({ letter, isDragging, id }: LetterTileProps) {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
   } = useDraggable({
-    id: letter,
+    id: id ?? letter,
   })
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined
+    // prevent browser touch scrolling/panning while dragging
+    touchAction: 'none',
+    WebkitTapHighlightColor: 'transparent',
+  } : { touchAction: 'none', WebkitTapHighlightColor: 'transparent' }
 
   return (
     <div

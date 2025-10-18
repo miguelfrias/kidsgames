@@ -14,6 +14,7 @@ import DrawingCanvas from './components/DrawingCanvas.tsx';
 import PopIt from './components/PopIt.tsx';
 import WordBuilderGame from './components/WordBuilderGame.tsx';
 import Dashboard from './components/Dashboard.tsx';
+import TetrisGame from './components/tetris/TetrisGame.tsx';
 
 const router = createHashRouter([
   {
@@ -48,6 +49,10 @@ const router = createHashRouter([
       {
         path: "word-builder",
         element: <WordBuilderGame />,
+      },
+      {
+        path: "tetris",
+        element: <TetrisGame />,
       },
     ]
   },

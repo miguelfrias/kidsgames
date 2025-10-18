@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { lockBodyScroll, unlockBodyScroll } from '../utils/scrollLock'
 import { DndContext, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { WordData } from '../types/WordBuilder.types'
 import { shuffleArray } from '../data/gameData'
@@ -17,7 +18,7 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
   const [placedLetters, setPlacedLetters] = useState<(string | null)[]>(
     Array(word.word.length).fill(null)
   )
-  const [availableLetters, setAvailableLetters] = useState<string[]>([])
+  const [availableLetters, setAvailableLetters] = useState<{ id: string, letter: string }[]>([])
   const [attemptCount, setAttemptCount] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
@@ -51,7 +52,9 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
 
   useEffect(() => {
     // Initialize shuffled letters
-    setAvailableLetters(shuffleArray(wordLetters))
+    const shuffled = shuffleArray(wordLetters)
+    const timestamp = Date.now()
+    setAvailableLetters(shuffled.map((l, i) => ({ id: `tile-${timestamp}-${i}`, letter: l })))
     setPlacedLetters(Array(word.word.length).fill(null))
     setAttemptCount(0)
   }, [word])
@@ -64,31 +67,37 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string)
+    lockBodyScroll()
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     setActiveId(null)
+    unlockBodyScroll()
 
     if (!over) return
 
-    const draggedLetter = active.id as string
+    const draggedId = active.id as string
     const targetSlotIndex = parseInt(over.id as string)
     
     if (isNaN(targetSlotIndex)) return
+    // Lookup the letter string by the dragged tile id
+    const tile = availableLetters.find(a => a.id === draggedId)
+    if (!tile) return
 
+    const draggedLetter = tile.letter
     const correctLetter = wordLetters[targetSlotIndex]
     const newPlacedLetters = [...placedLetters]
-    
+
     // Remove letter from its current position if it exists
     const existingIndex = newPlacedLetters.indexOf(draggedLetter)
     if (existingIndex !== -1) {
       newPlacedLetters[existingIndex] = null
     }
-    
+
     newPlacedLetters[targetSlotIndex] = draggedLetter.toLowerCase()
     setPlacedLetters(newPlacedLetters)
-    
+
     // Track wrong attempts for hint system
     if (draggedLetter.toLowerCase() !== correctLetter) {
       setAttemptCount(prev => prev + 1)
@@ -102,7 +111,9 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
 
   const resetWord = () => {
     setPlacedLetters(Array(word.word.length).fill(null))
-    setAvailableLetters(shuffleArray(wordLetters))
+  const seeded = shuffleArray(wordLetters)
+  const ts = Date.now()
+  setAvailableLetters(seeded.map((l, i) => ({ id: `tile-${ts}-${i}`, letter: l })))
     setAttemptCount(0)
   }
 
@@ -138,14 +149,15 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
   }
 
   // Calculate which letters are still available to show
-  const availableLettersToShow = availableLetters.filter((letter, index) => {
+  const availableLettersToShow = availableLetters.filter((entry, index) => {
+    const letter = entry.letter
     // Count how many of this letter are already placed
     const placedCount = placedLetters.filter(placedLetter => placedLetter === letter).length
     // Count how many of this letter should be in the word total
     const totalCount = wordLetters.filter(wordLetter => wordLetter === letter).length
     // Count how many of this letter we've already shown
-    const shownCount = availableLetters.slice(0, index).filter(availableLetter => availableLetter === letter).length
-    
+    const shownCount = availableLetters.slice(0, index).filter(availableLetter => availableLetter.letter === letter).length
+
     // Show this letter if we haven't placed all instances of it yet
     return placedCount + shownCount < totalCount
   })
@@ -205,11 +217,12 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
 
           {/* Available Letters */}
           <div className="flex justify-center gap-2 flex-wrap">
-            {availableLettersToShow.map((letter, index) => (
+            {availableLettersToShow.map((entry) => (
               <LetterTile
-                key={`${letter}-${index}`}
-                letter={letter}
-                isDragging={activeId === letter}
+                key={entry.id}
+                id={entry.id}
+                letter={entry.letter}
+                isDragging={activeId === entry.id}
               />
             ))}
           </div>
