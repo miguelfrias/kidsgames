@@ -13,7 +13,10 @@ function LetterTile({ letter, isDragging }: LetterTileProps) {
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined
+    // prevent browser touch scrolling/panning while dragging
+    touchAction: 'none',
+    WebkitTapHighlightColor: 'transparent',
+  } : { touchAction: 'none', WebkitTapHighlightColor: 'transparent' }
 
   return (
     <div

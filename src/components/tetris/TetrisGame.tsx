@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { DndContext, DragOverlay, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { useNavigate } from 'react-router-dom'
 import GameBoard from './GameBoard'
 import PieceBar from './PieceBar'
@@ -30,6 +30,7 @@ function TetrisGame() {
   const [draggedPieceId, setDraggedPieceId] = useState<string | null>(null)
   const [clearedCells, setClearedCells] = useState<Set<string>>(new Set())
   const [difficulty, setDifficulty] = useState<DifficultySettings>(DIFFICULTY_LEVELS[1])
+  const bodyOverflowRef = useRef<string | null>(null)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -83,10 +84,19 @@ function TetrisGame() {
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedPieceId(event.active.id as string)
+    if (typeof document !== 'undefined') {
+      bodyOverflowRef.current = document.body.style.overflow || ''
+      document.body.style.overflow = 'hidden'
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     setDraggedPieceId(null)
+    if (typeof document !== 'undefined') {
+      const prev = bodyOverflowRef.current ?? ''
+      document.body.style.overflow = prev
+      bodyOverflowRef.current = null
+    }
     
     const { active, over } = event
 
@@ -198,6 +208,33 @@ function TetrisGame() {
               pieces={availablePieces}
               draggedPieceId={draggedPieceId}
             />
+            <DragOverlay>
+              {draggedPieceId !== null ? (
+                // Render a simple preview for the dragged piece
+                (() => {
+                  const pieceIndex = parseInt((draggedPieceId as string).split('-')[1])
+                  const piece = availablePieces[pieceIndex]
+                  if (!piece) return null
+                  return (
+                    <div className="inline-block select-none pointer-events-none" style={{ transform: 'scale(1.1)' }}>
+                      <div className="inline-grid gap-0.5">
+                        {piece.shape.map((row, rowIndex) => (
+                          <div key={rowIndex} className="flex gap-0.5">
+                            {row.map((cell, colIndex) => (
+                              <div
+                                key={colIndex}
+                                className={`w-8 h-8 sm:w-10 sm:h-10 rounded ${cell === 1 ? 'shadow-md' : ''}`}
+                                style={{ backgroundColor: cell === 1 ? piece.color : 'transparent' }}
+                              />
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })()
+              ) : null}
+            </DragOverlay>
           </div>
         </DndContext>
 

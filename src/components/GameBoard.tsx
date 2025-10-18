@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { useState, useEffect, useRef } from 'react'
+import { DndContext, DragOverlay, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { WordData } from '../types/WordBuilder.types'
 import { shuffleArray } from '../data/gameData'
 import LetterTile from './LetterTile'
@@ -21,6 +21,7 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
   const [attemptCount, setAttemptCount] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
   const [activeId, setActiveId] = useState<string | null>(null)
+  const bodyOverflowRef = useRef<string | null>(null)
 
   // Configure sensors for both mouse and touch
   const mouseSensor = useSensor(MouseSensor, {
@@ -64,11 +65,20 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string)
+    if (typeof document !== 'undefined') {
+      bodyOverflowRef.current = document.body.style.overflow || ''
+      document.body.style.overflow = 'hidden'
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     setActiveId(null)
+    if (typeof document !== 'undefined') {
+      const prev = bodyOverflowRef.current ?? ''
+      document.body.style.overflow = prev
+      bodyOverflowRef.current = null
+    }
 
     if (!over) return
 
@@ -213,6 +223,13 @@ function GameBoard({ word, onWordComplete, onBack, onNextWord }: GameBoardProps)
               />
             ))}
           </div>
+          <DragOverlay>
+            {activeId ? (
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white border-4 border-blue-400 rounded-xl flex items-center justify-center text-3xl sm:text-4xl font-bold text-blue-800 shadow-lg select-none pointer-events-none" aria-hidden>
+                {activeId.toString().toUpperCase()}
+              </div>
+            ) : null}
+          </DragOverlay>
 
           {/* Speak Word Button */}
           <br />

@@ -20,7 +20,10 @@ function Piece({ piece, id, isDragging }: PieceProps) {
 
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : undefined
+    // prevent browser touch scrolling/panning while dragging
+    touchAction: 'none',
+    WebkitTapHighlightColor: 'transparent',
+  } : { touchAction: 'none', WebkitTapHighlightColor: 'transparent' }
 
   const cellSize = 'w-8 h-8 sm:w-10 sm:h-10'
 
