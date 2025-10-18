@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { DndContext, DragOverlay, DragEndEvent, DragStartEvent, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock'
 import { useNavigate } from 'react-router-dom'
 import GameBoard from './GameBoard'
 import PieceBar from './PieceBar'
@@ -30,7 +31,6 @@ function TetrisGame() {
   const [draggedPieceId, setDraggedPieceId] = useState<string | null>(null)
   const [clearedCells, setClearedCells] = useState<Set<string>>(new Set())
   const [difficulty, setDifficulty] = useState<DifficultySettings>(DIFFICULTY_LEVELS[1])
-  const bodyOverflowRef = useRef<string | null>(null)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -84,19 +84,12 @@ function TetrisGame() {
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedPieceId(event.active.id as string)
-    if (typeof document !== 'undefined') {
-      bodyOverflowRef.current = document.body.style.overflow || ''
-      document.body.style.overflow = 'hidden'
-    }
+    lockBodyScroll()
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
     setDraggedPieceId(null)
-    if (typeof document !== 'undefined') {
-      const prev = bodyOverflowRef.current ?? ''
-      document.body.style.overflow = prev
-      bodyOverflowRef.current = null
-    }
+    unlockBodyScroll()
     
     const { active, over } = event
 
@@ -216,7 +209,14 @@ function TetrisGame() {
                   const piece = availablePieces[pieceIndex]
                   if (!piece) return null
                   return (
-                    <div className="inline-block select-none pointer-events-none" style={{ transform: 'scale(1.1)' }}>
+                    <div
+                      className="inline-block select-none pointer-events-none"
+                      style={{
+                        transform: 'translateY(-6px) scale(1.06)',
+                        transition: 'transform 120ms ease',
+                        boxShadow: '0 10px 20px rgba(0,0,0,0.15)'
+                      }}
+                    >
                       <div className="inline-grid gap-0.5">
                         {piece.shape.map((row, rowIndex) => (
                           <div key={rowIndex} className="flex gap-0.5">
