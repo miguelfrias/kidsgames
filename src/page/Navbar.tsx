@@ -1,6 +1,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Link } from 'react-router-dom';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, ArrowsPointingOutIcon, ArrowsPointingInIcon } from '@heroicons/react/24/outline'
+import { useEffect, useState } from 'react'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
@@ -17,6 +18,31 @@ function classNames(...classes: string[]) {
 }
 
 export default function Navbar() {
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
+
+  useEffect(() => {
+    const onChange = () => {
+      const fs = Boolean(document.fullscreenElement)
+      setIsFullscreen(fs)
+    }
+    document.addEventListener('fullscreenchange', onChange)
+    return () => document.removeEventListener('fullscreenchange', onChange)
+  }, [])
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen()
+        setIsFullscreen(true)
+      } else {
+        await document.exitFullscreen()
+        setIsFullscreen(false)
+      }
+    } catch (e) {
+      // ignore errors (some browsers may block fullscreen)
+    }
+  }
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open, close }) => (
@@ -48,6 +74,22 @@ export default function Navbar() {
 
                   </div>
                 </div>
+              </div>
+              {/* Fullscreen toggle */}
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  aria-pressed={isFullscreen}
+                  aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                  className="rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                >
+                  {isFullscreen ? (
+                    <ArrowsPointingInIcon className="block h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <ArrowsPointingOutIcon className="block h-6 w-6" aria-hidden="true" />
+                  )}
+                </button>
               </div>
             </div>
           </div>
