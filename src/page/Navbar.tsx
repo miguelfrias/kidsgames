@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
+  { name: 'Spell & Read', href: '/word-reader', current: false },
   { name: 'Random Letter', href: '/random-letter', current: false },
   { name: 'Random Color', href: '/random-color', current: false },
   { name: 'Tic Tac Toe', href: '/tic-tac-toe', current: false },

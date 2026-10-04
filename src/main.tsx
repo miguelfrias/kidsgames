@@ -16,6 +16,8 @@ import WordBuilderGame from './components/WordBuilderGame.tsx';
 import Dashboard from './components/Dashboard.tsx';
 import TetrisGame from './components/tetris/TetrisGame.tsx';
 
+import WordReader from './components/WordReader.tsx';
+
 const router = createHashRouter([
   {
     path: "/",
@@ -25,6 +27,10 @@ const router = createHashRouter([
       {
         index: true,
         element: <Dashboard />,
+      },
+      {
+        path: "word-reader",
+        element: <WordReader />,
       },
       {
         path: "random-letter",

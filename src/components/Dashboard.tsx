@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom'
 function Dashboard() {
   const games = [
     {
+      name: 'Spell & Read',
+      href: '/word-reader',
+      icon: '🗣️',
+      description: 'Type any word from your book to hear how it sounds and reads!',
+      color: 'bg-indigo-600'
+    },
+    {
       name: 'Word Builder',
       href: '/word-builder',
       icon: '📝',
