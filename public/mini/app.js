@@ -12,27 +12,27 @@
     C: 'kuh',
     D: 'duh',
     E: 'eh',
-    F: 'fff',
+    F: 'fuh',
     G: 'guh',
     H: 'huh',
     I: 'ih',
     J: 'juh',
     K: 'kuh',
-    L: 'lll',
-    M: 'mmm',
-    N: 'nnn',
+    L: 'luh',
+    M: 'muh',
+    N: 'nuh',
     O: 'aw',
     P: 'puh',
     Q: 'kwuh',
-    R: 'rrr',
-    S: 'sss',
+    R: 'ruh',
+    S: 'suh',
     T: 'tuh',
     U: 'uh',
-    V: 'vvv',
+    V: 'vuh',
     W: 'wuh',
     X: 'ks',
     Y: 'yuh',
-    Z: 'zzz'
+    Z: 'zuh'
   };
 
   var STORAGE_KEY = 'kidsgames_word_reader_settings';
@@ -49,6 +49,9 @@
   var word = '';
   var settings = loadSettings();
   var voicesList = [];
+  var activeUtterance = null;
+  var lastSpokenChar = '';
+  var lastSpokenTime = 0;
 
   // DOM Elements
   var wordStage = document.getElementById('wordStage');
@@ -130,6 +133,15 @@
         }
       }
 
+      // Retain reference to prevent Mobile Safari WebKit premature garbage collection
+      activeUtterance = utterance;
+      utterance.onend = function () {
+        activeUtterance = null;
+      };
+      utterance.onerror = function () {
+        activeUtterance = null;
+      };
+
       window.speechSynthesis.speak(utterance);
     } catch (err) {
       console.warn('Speech error:', err);
@@ -137,7 +149,16 @@
   }
 
   function speakLetter(char) {
+    var now = new Date().getTime();
     var upper = char.toUpperCase();
+
+    // Prevent duplicate speech fires within 150ms for the same character
+    if (upper === lastSpokenChar && (now - lastSpokenTime) < 150) {
+      return;
+    }
+    lastSpokenChar = upper;
+    lastSpokenTime = now;
+
     var textToSpeak = settings.phonicsMode
       ? (PHONICS_SOUNDS[upper] || upper)
       : upper;
@@ -250,7 +271,10 @@
       }
 
       word = cleanVal;
-      wordInput.value = cleanVal;
+      // Only mutate DOM input value if characters were actually stripped to avoid WebKit caret/buffer reset
+      if (wordInput.value !== cleanVal) {
+        wordInput.value = cleanVal;
+      }
       renderTiles();
     });
 

@@ -40,6 +40,7 @@ export default function WordReader() {
   const [activeSpeechSpeed, setActiveSpeechSpeed] = useState<'normal' | 'slow' | null>(null)
 
   const inputRef = useRef<HTMLInputElement>(null)
+  const lastSpokenRef = useRef<{ char: string; time: number }>({ char: '', time: 0 })
 
   // Load and listen for SpeechSynthesis voices (iOS/Safari loads them asynchronously)
   useEffect(() => {
@@ -80,7 +81,13 @@ export default function WordReader() {
   // Speak a single letter (Letter Name vs. Phonics Sound)
   const speakLetter = useCallback(
     (letter: string) => {
+      const now = Date.now()
       const upper = letter.toUpperCase()
+      if (upper === lastSpokenRef.current.char && now - lastSpokenRef.current.time < 150) {
+        return
+      }
+      lastSpokenRef.current = { char: upper, time: now }
+
       const textToSpeak = settings.phonicsMode
         ? PHONICS_SOUNDS[upper] || upper
         : upper
