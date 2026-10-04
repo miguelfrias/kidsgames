@@ -106,9 +106,12 @@ function Dashboard() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 space-y-2">
           <p className="text-lg text-gray-600">
             Choose a game above to start learning and having fun! 🌟
+          </p>
+          <p className="text-xs text-gray-400">
+            Using an older iPad or iPad Mini? <a href="./mini/" className="text-purple-600 font-semibold underline hover:text-purple-800">Launch iPad Mini Mode (iOS 9)</a>
           </p>
         </div>
       </div>

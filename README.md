@@ -8,6 +8,9 @@
 [![Vite Version](https://img.shields.io/badge/vite-7.0.0-purple.svg)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-4.1.11-38bdf8.svg)](https://tailwindcss.com/)
 
+**Live Production App**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/](https://sea-turtle-app-nsnbs.ondigitalocean.app/)  
+**iPad Mini Legacy Portal (iOS 9.3.5)**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/](https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/)
+
 ---
 
 ## 🌟 Overview
@@ -23,6 +26,7 @@ Designed from the ground up for tablets, mobile touchscreens, and desktop browse
 | Game | Route | Description | Educational Focus |
 | :--- | :--- | :--- | :--- |
 | **🗣️ Spell & Read** | `/#/word-reader` | Dedicated companion for reading physical books. Type any unfamiliar word to hear each letter spoken (letter names or phonics) and pronounce the whole word. Includes an iOS/Safari voice & speed configuration drawer (🐰 normal & 🐢 turtle slow speed). | Independent reading, phonics, pronunciation, vocabulary |
+| **📱 Spell & Read (iPad Mini)** | `/mini/` | Standalone zero-dependency ES5 mini-app specifically engineered for legacy devices like the iPad Mini 1st Gen (iOS 9.3.5 / Safari 9). Automatic redirection for legacy browsers. | Legacy hardware compatibility, phonics, pronunciation |
 | **📝 Word Builder** | `/#/word-builder` | Drag-and-drop letter tiles into designated slots to spell words across themes (Animals, Nature, Vehicles, Food) and difficulty levels (3, 4, 5 letters). Features audio pronunciation, intelligent hints after 3 attempts, and celebratory confetti. | Phonics, spelling, vocabulary, motor skills |
 | **🔤 Random Letter** | `/#/random-letter` | Large-scale letter flashcards with speech synthesis. Toggle between vowels only or the full alphabet. Features bilingual animal associations (English & Spanish) with real-world animal imagery. | Alphabet recognition, phonics, bilingual vocabulary (EN/ES) |
 | **🌈 Random Color** | `/#/random-color` | High-impact, full-screen color display with a simple tap-to-change button for guessing and learning colors. | Color recognition, visual discrimination |
@@ -65,7 +69,11 @@ kidsgames/
 │   └── copilot-instructions.md  # Copilot coding conventions
 ├── public/
 │   ├── mickey_ears_edited.png   # PopIt game target asset
-│   └── vite.svg                 # Application favicon
+│   ├── vite.svg                 # Application favicon
+│   └── mini/                    # iPad Mini (iOS 9.3.5) standalone legacy app
+│       ├── index.html           # Semantic zero-scroll markup
+│       ├── style.css            # Standard CSS with -webkit- prefixes
+│       └── app.js               # Strict ES5 speech and letter engine
 ├── src/
 │   ├── assets/
 │   │   ├── animals-EN.tsx       # English A-Z animal vocabulary dictionary
@@ -191,11 +199,18 @@ The repository includes a GitHub Actions workflow at [`.github/workflows/node.js
 
 ### DigitalOcean App Platform
 
-A dedicated script is included in `package.json` for environments like DigitalOcean App Platform:
+The production application is continuously deployed to DigitalOcean App Platform on every push to the `main` branch:
+
+- **Live URL**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/](https://sea-turtle-app-nsnbs.ondigitalocean.app/)
+- **iPad Mini Legacy Portal**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/](https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/)
+
+Build script configured in `package.json`:
 
 ```bash
 npm run build:digitalocean
 ```
+
+*(Note: During build, Vite compiles the modern React 19 app into `dist/` and automatically copies the zero-dependency ES5 iPad Mini legacy portal from `public/mini/` into `dist/mini/`, allowing both to be served seamlessly from the same domain).*
 
 ---
 

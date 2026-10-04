@@ -7,6 +7,8 @@ Welcome, AI Agent or developer! This document provides core architectural contex
 ## 1. Project Overview & Mission
 
 - **Repository**: `kidsgames`
+- **Live Production URL**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/](https://sea-turtle-app-nsnbs.ondigitalocean.app/)
+- **iPad Mini Legacy Portal**: [https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/](https://sea-turtle-app-nsnbs.ondigitalocean.app/mini/)
 - **Target Audience**: Toddlers and young children aged **3 to 6 years old**.
 - **Core Mission**: Provide a safe, cheerful, touch-friendly, and educational web application & Progressive Web App (PWA) where kids can learn phonics, letters, colors, basic strategy, and fine motor skills.
 - **Key UX Philosophy**:
@@ -38,6 +40,11 @@ Welcome, AI Agent or developer! This document provides core architectural contex
 ## 3. Directory Architecture
 
 ```text
+public/
+└── mini/                    # iPad Mini 1 (iOS 9.3.5) standalone ES5 legacy app
+    ├── index.html           # Semantic zero-scroll markup
+    ├── style.css            # Standard CSS with -webkit- prefixes
+    └── app.js               # Strict ES5 speech synthesis & letter engine
 src/
 ├── assets/                  # Static data modules (e.g. bilingual animal dictionaries)
 │   ├── animals-EN.tsx       # English vocabulary keyed by letter (A-Z)
@@ -242,6 +249,7 @@ When tasked with adding a new game to the app, follow this checklist:
 | **Missing speech voice** | `window.speechSynthesis.getVoices()` loads asynchronously in Chrome/Blink browsers. | If voices list is empty, listen to the `onvoiceschanged` event before selecting specific voice objects. |
 | **Relative asset paths in production** | Assets referenced directly without base path can fail on subpaths. | Place static public assets in `public/` and reference with root-relative paths (`/asset.png`), or import them via ES modules in `src/assets/`. |
 | **React 19 type definitions** | React 19 changes some type contracts (e.g. `useRef` types, JSX definitions). | Always verify type compatibility with `tsc` during `npm run build`. |
+| **iPad Mini (iOS 9.3.5) blank page** | iOS 9 lacks ES Module support (`<script type="module">`), modern syntax (`??`, `?.`), and CSS `@layer`. | Maintained via dedicated standalone ES5 app in `public/mini/`. `index.html` automatically detects and redirects legacy browsers. |
 
 ---
 

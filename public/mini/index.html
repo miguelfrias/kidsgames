@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <title>Spell & Read - Kids Games</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="appContainer" class="app-container">
+    <div class="content-wrapper">
+      
+      <!-- 1. TOP: The Word Stage & Form (Immediately visible) -->
+      <section id="wordStage" class="word-card">
+        <div class="card-header">
+          <span class="card-label">✨ Word from your book:</span>
+          <div class="card-actions">
+            <button id="btnBackspace" type="button" class="btn-tiny btn-delete" style="display: none;" title="Delete last letter">
+              ⌫ Delete
+            </button>
+            <button id="btnClear" type="button" class="btn-tiny btn-clear" style="display: none;" title="Clear entire word">
+              🔄 Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Letter Blocks Display Area -->
+        <div id="tilesContainer" class="tiles-area">
+          <div id="emptyPlaceholder" class="empty-placeholder">
+            <span class="book-icon">📖</span>
+            <p class="placeholder-text">Tap here to type a word...</p>
+            <p class="placeholder-subtext">(Use your iPad or computer keyboard)</p>
+          </div>
+          <div id="tilesRow" class="tiles-row" style="display: none;"></div>
+        </div>
+
+        <!-- Embedded Typing Input Bar -->
+        <div class="input-row">
+          <input 
+            id="wordInput" 
+            type="text" 
+            placeholder="Type letters here..." 
+            autocomplete="off" 
+            autocorrect="off" 
+            autocapitalize="none" 
+            spellcheck="false"
+          >
+          <p class="input-hint">Press <strong>Return / Enter ↵</strong> on keyboard to speak</p>
+        </div>
+      </section>
+
+      <!-- 2. MIDDLE: Pronunciation Action Buttons -->
+      <section class="actions-section">
+        <button id="btnSayWord" type="button" class="btn-say-word" disabled>
+          <span class="speaker-icon">🔊</span>
+          <span>SAY THE WORD</span>
+        </button>
+
+        <div class="speed-buttons-row">
+          <button id="btnSlow" type="button" class="btn-speed btn-turtle" disabled>
+            <span class="animal-icon">🐢</span>
+            <span>Sound Out Slow</span>
+          </button>
+          <button id="btnNormal" type="button" class="btn-speed btn-rabbit" disabled>
+            <span class="animal-icon">🐰</span>
+            <span>Normal Speed</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. BOTTOM: Secondary Settings Footer -->
+      <footer class="footer-bar">
+        <div class="phonics-toggle-box">
+          <label class="toggle-label" for="phonicsToggle">
+            <input type="checkbox" id="phonicsToggle">
+            <span class="toggle-slider"></span>
+            <span id="phonicsLabelText" class="toggle-text">🔤 Letter Names</span>
+          </label>
+        </div>
+
+        <button id="btnOpenSettings" type="button" class="btn-settings">
+          <span>⚙️ Voice & Speed</span>
+        </button>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Voice & Speed Settings Modal (iOS 9 Friendly) -->
+  <div id="settingsModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>⚙️ Reading Voice & Speed</h3>
+          <p>Customize iOS Safari voice and reading pace</p>
+        </div>
+        <button id="btnCloseSettingsX" type="button" class="btn-close-x" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Voice Selection -->
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="voiceSelect"><strong>🗣️ Choose Voice (iOS Safari)</strong></label>
+            <button id="btnTestVoice" type="button" class="btn-test-voice">🔊 Test Voice</button>
+          </div>
+          <p class="setting-desc">Safari provides built-in voices like Samantha, Karen, or Daniel.</p>
+          <select id="voiceSelect" class="form-select">
+            <option value="">Default System Voice (Auto)</option>
+          </select>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Normal Speed -->
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="normalSpeedRange"><strong>🐰 Normal Reading Speed</strong></label>
+            <span id="normalSpeedBadge" class="badge badge-blue">0.85x</span>
+          </div>
+          <p class="setting-desc">Standard conversational word pronunciation.</p>
+          <input id="normalSpeedRange" type="range" min="0.6" max="1.2" step="0.05" value="0.85">
+          <div class="range-labels">
+            <span>Slower (0.6x)</span>
+            <span>Faster (1.2x)</span>
+          </div>
+        </div>
+
+        <!-- Slow Speed -->
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="slowSpeedRange"><strong>🐢 Turtle "Sound It Out" Speed</strong></label>
+            <span id="slowSpeedBadge" class="badge badge-green">0.50x</span>
+          </div>
+          <p class="setting-desc">Extra slow pace so your child can hear each sound clearly.</p>
+          <input id="slowSpeedRange" type="range" min="0.3" max="0.7" step="0.05" value="0.5">
+          <div class="range-labels">
+            <span>Very Slow (0.3x)</span>
+            <span>Moderate (0.7x)</span>
+          </div>
+        </div>
+
+        <!-- Pitch -->
+        <div class="setting-group">
+          <div class="setting-label-row">
+            <label for="pitchRange"><strong>🎵 Voice Pitch</strong></label>
+            <span id="pitchBadge" class="badge badge-purple">1.1x</span>
+          </div>
+          <p class="setting-desc">Higher pitch sounds friendly and child-oriented.</p>
+          <input id="pitchRange" type="range" min="0.8" max="1.4" step="0.1" value="1.1">
+          <div class="range-labels">
+            <span>Deeper (0.8x)</span>
+            <span>Higher (1.4x)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btnResetSettings" type="button" class="btn-link">🔄 Reset Defaults</button>
+        <button id="btnCloseSettings" type="button" class="btn-save">Save & Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strict ES5 Script (iOS 9.3.5 WebKit compatible) -->
+  <script src="app.js"></script>
+</body>
+</html>
