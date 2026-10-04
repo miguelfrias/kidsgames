@@ -176,6 +176,8 @@ html, body {
   align-items: center;
   gap: 6px;
   max-width: 100%;
+  /* custom */
+  line-height: 1.5;
 }
 
 .tile {
@@ -196,6 +198,9 @@ html, body {
   justify-content: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   margin: 3px;
+  /* custom */
+  display: inline;
+  padding: 2px 8px;
 }
 
 @media (min-width: 500px) {
